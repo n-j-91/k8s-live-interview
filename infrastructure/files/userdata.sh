@@ -35,3 +35,4 @@ mv ./kind /usr/local/bin/kind
 
 #Create kind cluster
 kind create cluster --kubeconfig /home/ubuntu/.kube/config
+sudo chown ubuntu:ubuntu /home/ubuntu/.kube/config
