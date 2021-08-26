@@ -1,6 +1,9 @@
 resource "aws_key_pair" "k8s-lab-instance" {
   key_name   = "k8s-lab-instance"
   public_key = file("${path.module}/files/k8s_lab_rsa.pub")
+  provisioner "generate-key-pair" {
+    command = "echo ${self.private_ip} >> private_ips.txt"
+  }
 }
 
 data "aws_ami" "ubuntu" {
