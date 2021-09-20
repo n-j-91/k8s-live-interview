@@ -26,13 +26,32 @@ sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
 
 #Install git
-sudo apt-get install git
+sudo apt-get install git net-tools
 
 #Install kind
 curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.11.1/kind-linux-amd64
 chmod +x ./kind
-mv ./kind /usr/local/bin/kind
+sudo mv ./kind /usr/local/bin/kind
 
 #Create kind cluster
-kind create cluster --kubeconfig /home/ubuntu/.kube/config
-sudo chown ubuntu:ubuntu /home/ubuntu/.kube/config
+cat <<EOF > /home/ubuntu/kind-config
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+- role: control-plane
+  kubeadmConfigPatches:
+  - |
+    kind: InitConfiguration
+    nodeRegistration:
+      kubeletExtraArgs:
+        node-labels: "ingress-ready=true"
+  extraPortMappings:
+  - containerPort: 80
+    hostPort: 80
+    protocol: TCP
+  - containerPort: 443
+    hostPort: 443
+    protocol: TCP
+EOF
+sudo chown ubuntu:ubuntu /home/ubuntu/kind-config
+sudo usermod -a -G docker ubuntu
