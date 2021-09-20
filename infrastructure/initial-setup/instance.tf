@@ -24,7 +24,9 @@ data "template_file" "healthcheck" {
   template = file("${path.module}/../files/healthcheck.sh.tpl")
 }
 
-resource "aws_instance" "k8s-lab-instance" {
+resource "aws_instance" "k8s-lab-baremetal-instance" {
+  count = var.ami-id == "" ? 1 : 0
+
   ami             = data.aws_ami.ubuntu.id
   instance_type   = "t2.medium"
   key_name        = aws_key_pair.k8s-lab-instance.key_name
@@ -44,7 +46,7 @@ resource "aws_instance" "k8s-lab-instance" {
       type        = "ssh"
       user        = "ubuntu"
       private_key = file("${path.module}/../files/k8s_lab_rsa")
-      host        = aws_instance.k8s-lab-instance.public_ip
+      host        = aws_instance.k8s-lab-baremetal-instance[count.index].public_ip
     }
   }
   provisioner "file" {
@@ -55,7 +57,7 @@ resource "aws_instance" "k8s-lab-instance" {
       type        = "ssh"
       user        = "ubuntu"
       private_key = file("${path.module}/../files/k8s_lab_rsa")
-      host        = aws_instance.k8s-lab-instance.public_ip
+      host        = aws_instance.k8s-lab-baremetal-instance[count.index].public_ip
     }
   }
 
@@ -69,7 +71,7 @@ resource "aws_instance" "k8s-lab-instance" {
       type        = "ssh"
       user        = "ubuntu"
       private_key = file("${path.module}/../files/k8s_lab_rsa")
-      host        = aws_instance.k8s-lab-instance.public_ip
+      host        = aws_instance.k8s-lab-baremetal-instance[count.index].public_ip
     }
   }
 
@@ -83,7 +85,30 @@ resource "aws_instance" "k8s-lab-instance" {
       type        = "ssh"
       user        = "ubuntu"
       private_key = file("${path.module}/../files/k8s_lab_rsa")
-      host        = aws_instance.k8s-lab-instance.public_ip
+      host        = aws_instance.k8s-lab-baremetal-instance[count.index].public_ip
     }
+  }
+
+  tags = {
+    name = "k8s-lab-instance"
+  }
+}
+
+resource "aws_instance" "k8s-lab-ami-instance" {
+  count = var.ami-id != "" ? 1 : 0
+
+  ami             = var.ami-id
+  instance_type   = "t2.medium"
+  key_name        = aws_key_pair.k8s-lab-instance.key_name
+  security_groups = [aws_security_group.k8s-lab-sg.id]
+  subnet_id       = data.aws_subnet.default_subnet.id
+
+  root_block_device {
+    volume_size = 30
+    volume_type = "standard"
+  }
+
+  tags = {
+    name = "k8s-lab-instance"
   }
 }

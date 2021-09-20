@@ -1,7 +1,11 @@
 # Local .terraform directories
 infrastructure/.terraform/*
 infrastructure/.terraform.*
+infrastructure/.terraform.lock.hcl
 infrastructure/files/*rsa*
+infrastructure/initial-setup/.terraform/*
+infrastructure/initial-setup/.terraform.*
+infrastructure/initial-setup/.terraform.lock.hcl
 **/.terraform/*
 
 # .tfstate files
