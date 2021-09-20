@@ -10,7 +10,7 @@ data "aws_instance" "ssh-details" {
   ]
 }
 
-output "ssh-details-baremetal" {
+output "ssh-details" {
   value       = "ssh -i ./files/k8s_lab_rsa ubuntu@${data.aws_instance.ssh-details.public_ip}"
   description = "SSH details"
 }
