@@ -14,3 +14,8 @@ output "ssh-details" {
   value       = "ssh -i ./files/k8s_lab_rsa ubuntu@${data.aws_instance.ssh-details.public_ip}"
   description = "SSH details"
 }
+
+output "host-details" {
+  value       = "Add following record to your /etc/hosts file -> ${data.aws_instance.ssh-details.public_ip} sample-app.example.com"
+  description = "Host details"
+}
