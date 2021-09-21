@@ -46,6 +46,11 @@ spec:
               value: /resources
             - name: LOG_LEVEL
               value: debug
+            - name: MY_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: sample-app-secret
+                  key: secretkey
           ports:
             - containerPort: 8080
               name: sample-app
