@@ -9,4 +9,4 @@ spec:
   ports:
     - name: sample-app
       port: 80
-      targetPort: 8080
+      targetPort: sample-app
