@@ -1,0 +1,4 @@
+manifests
+manifests/*
+manifests/**
+sample-app/resources/*.json

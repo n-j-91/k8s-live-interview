@@ -13,6 +13,7 @@ def health_check():
     Considered as a health check endpoint for the application.
     :return: A tuple with json data and status_code
     """
+    logging.debug("GET /health is called")
     data = {"msg": "Server is healthy", "status_code": 200}
     return jsonify(data), 200
 
@@ -23,9 +24,12 @@ def read_json():
     Considered as a health check endpoint for the application.
     :return: A tuple with json data and status_code
     """
+    logging.debug("GET /readjson is called")
     data = jsonreader.read_json()
-    if data is None:
-        data = {"msg": "No {0} file is found in {1}".format(settings.FILE_NAME, settings.JSON_DIR), "status_code": 404}
+    if len(data) == 0:
+        data = {"msg": "No json files found in {0}".format( settings.JSON_DIR), "status_code": 404}
+        logging.error("no json files found in {0}".format(settings.JSON_DIR))
         return jsonify(data), 404
     else:
+        logging.debug("json files found in {0}".format(settings.JSON_DIR))
         return jsonify(data), 201

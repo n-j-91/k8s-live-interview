@@ -103,7 +103,7 @@ resource "aws_instance" "k8s-lab-baremetal-instance" {
 
   provisioner "remote-exec" {
     inline = [
-      "docker build -t sample-app:1.0.0-0 -f /home/ubuntu/app/Dockerfile /home/ubuntu/app",
+      "cd /home/ubuntu/app && docker build -t sample-app:1.0.0-0 -f Dockerfile .",
       "kind load docker-image sample-app:1.0.0-0",
     ]
 
@@ -147,7 +147,7 @@ resource "aws_instance" "k8s-lab-ami-instance" {
 
   provisioner "remote-exec" {
     inline = [
-      "docker build -t sample-app:1.0.0-0 -f /home/ubuntu/app/Dockerfile /home/ubuntu/app",
+      "cd /home/ubuntu/app && docker build -t sample-app:1.0.0-0 -f Dockerfile .",
       "kind load docker-image sample-app:1.0.0-0",
     ]
 
