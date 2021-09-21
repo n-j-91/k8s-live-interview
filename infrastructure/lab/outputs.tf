@@ -1,8 +1,8 @@
 
 data "aws_instance" "ssh-details" {
   filter {
-    name   = "tag:name"
-    values = ["k8s-lab-instance"]
+    name   = "tag:Name"
+    values = ["${var.unique-prefix}-k8s-lab-instance"]
   }
   depends_on = [
     aws_instance.k8s-lab-baremetal-instance,

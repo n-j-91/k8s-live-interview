@@ -1,5 +1,5 @@
 resource "aws_key_pair" "k8s-lab-instance" {
-  key_name   = "k8s-lab-instance"
+  key_name   = "${var.unique-prefix}-k8s-lab-instance"
   public_key = file("${path.module}/../files/k8s_lab_rsa.pub")
 }
 
@@ -114,8 +114,27 @@ resource "aws_instance" "k8s-lab-baremetal-instance" {
       host        = aws_instance.k8s-lab-baremetal-instance[count.index].public_ip
     }
   }
+
+  provisioner "remote-exec" {
+    inline = [
+      "kubectl create -f /home/ubuntu/app/manifests/pv.yml",
+      "kubectl create -f /home/ubuntu/app/manifests/pvc.yml",
+      "kubectl create -f /home/ubuntu/app/manifests/secret.yml",
+      "kubectl create -f /home/ubuntu/app/manifests/deployment.yml",
+      "kubectl create -f /home/ubuntu/app/manifests/service.yml",
+      "kubectl create -f /home/ubuntu/app/manifests/ingress.yml",
+    ]
+
+    connection {
+      type        = "ssh"
+      user        = "ubuntu"
+      private_key = file("${path.module}/../files/k8s_lab_rsa")
+      host        = aws_instance.k8s-lab-baremetal-instance[count.index].public_ip
+    }
+  }
+
   tags = {
-    name = "k8s-lab-instance"
+    Name = "${var.unique-prefix}-k8s-lab-instance"
   }
 }
 
@@ -159,7 +178,25 @@ resource "aws_instance" "k8s-lab-ami-instance" {
     }
   }
 
+  provisioner "remote-exec" {
+    inline = [
+      "kubectl create -f /home/ubuntu/app/manifests/pv.yml",
+      "kubectl create -f /home/ubuntu/app/manifests/pvc.yml",
+      "kubectl create -f /home/ubuntu/app/manifests/secret.yml",
+      "kubectl create -f /home/ubuntu/app/manifests/deployment.yml",
+      "kubectl create -f /home/ubuntu/app/manifests/service.yml",
+      "kubectl create -f /home/ubuntu/app/manifests/ingress.yml",
+    ]
+
+    connection {
+      type        = "ssh"
+      user        = "ubuntu"
+      private_key = file("${path.module}/../files/k8s_lab_rsa")
+      host        = aws_instance.k8s-lab-ami-instance[count.index].public_ip
+    }
+  }
+
   tags = {
-    name = "k8s-lab-instance"
+    Name = "${var.unique-prefix}-k8s-lab-instance"
   }
 }

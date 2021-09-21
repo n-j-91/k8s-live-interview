@@ -1,5 +1,5 @@
 resource "aws_security_group" "k8s-lab-sg" {
-  name        = "k8s-lab-sg"
+  name        = "${var.unique-prefix}-k8s-lab-sg"
   description = "Allow traffic to k8s lab instance"
   vpc_id      = data.aws_vpc.default_vpc.id
 }
