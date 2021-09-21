@@ -27,7 +27,7 @@ spec:
               memory: "200Mi"
           livenessProbe:
             httpGet:
-              path: /_status/healthz
+              path: /health
               port: sample-app
             initialDelaySeconds: 20
             timeoutSeconds: 5
@@ -35,7 +35,7 @@ spec:
             periodSeconds: 10
           readinessProbe:
             httpGet:
-              path: /_status/healthz
+              path: /health
               port: sample-app
             initialDelaySeconds: 20
             timeoutSeconds: 5

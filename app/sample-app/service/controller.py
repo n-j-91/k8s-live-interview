@@ -6,10 +6,10 @@ from . import settings
 app = Flask("receiver")
 
 
-@app.route("/_status/healthz", methods=["GET"])
+@app.route("/health", methods=["GET"])
 def health_check():
     """
-    Requests sent to / (root) are handled by this method.
+    Requests sent to /health (root) are handled by this method.
     Considered as a health check endpoint for the application.
     :return: A tuple with json data and status_code
     """
@@ -17,11 +17,11 @@ def health_check():
     return jsonify(data), 200
 
 
-@app.route("/v1/readsecret", methods=["GET"])
+@app.route("/readsecret", methods=["GET"])
 def read_secret():
     """
-    Requests sent to /v1/readsecret (root) are handled by this method.
-    :return: A secret read from MY_SECRET environment variable
+    Requests sent to /readsecret (root) are handled by this method.
+    :return: A secret read from MY_SECRET environment variable with status code
     """
     data = None
     if settings.MY_SECRET is not None:
@@ -34,11 +34,11 @@ def read_secret():
         return jsonify(data), 404
 
 
-@app.route("/v1/readjson", methods=["GET"])
+@app.route("/readjson", methods=["GET"])
 def read_json():
     """
-    Requests sent to /v1/readjson (root) are handled by this method.
-    :return: A list of all json content loaded from the settings.JSON_DIR
+    Requests sent to /readjson (root) are handled by this method.
+    :return: A list of all json content loaded from the settings.JSON_DIR with status code
     """
     data = jsonreader.read_json()
     if len(data) == 0:
