@@ -5,4 +5,5 @@ variable "region" {
 
 variable "ami-id" {
   type = string
+  description = "AMI ID with existing configurations"
 }

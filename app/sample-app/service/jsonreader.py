@@ -6,13 +6,13 @@ from . import settings
 
 def read_json():
   data = list()
-  for entry in os.scandir(settings.JSON_DIR):
-    if (entry.path.endswith(".json") and entry.is_file()):
-      logging.debug("{0} is a json file".format(entry))
+  for filename in os.listdir(settings.JSON_DIR):
+    if filename.endswith(".json"):
+      logging.debug("{0} is a json file".format(filename))
       try:
-        with open(entry.path, 'r') as inputFile:
-          logging.debug("appending content from {0} to response".format(entry))
+        with open(os.path.join(settings.JSON_DIR, filename), 'r') as inputFile:
+          logging.debug("appending content from {0} to response".format(filename))
           data.append(json.load(inputFile))
       except IOError:
-        logging.error("{0} cannot be opened".format(entry.path))
+        logging.error("{0} cannot be opened".format(filename))
   return data
