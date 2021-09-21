@@ -48,14 +48,10 @@ spec:
             - containerPort: 8080
               name: sample-app
           volumeMounts:
-            - mountPath: /data
-              name: data
             - mountPath: /resources
               name: input-jsons
       volumes:
-        - name: data
-          emptyDir: {}
         - name: input-jsons
-          configMap:
-            name: sample-app-inputs
+          persistentVolumeClaim:
+            claimName: input-jsons-pvc
       restartPolicy: Always

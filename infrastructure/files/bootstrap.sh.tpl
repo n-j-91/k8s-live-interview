@@ -33,6 +33,11 @@ curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.11.1/kind-linux-amd64
 chmod +x ./kind
 sudo mv ./kind /usr/local/bin/kind
 
+#Create externalmount for PVC
+mkdir -p /home/ubuntu/hostvolumes/volume-1
+mkdir -p /home/ubuntu/hostvolumes/volume-2
+mkdir -p /home/ubuntu/hostvolumes/volume-3
+
 #Create kind cluster
 cat <<EOF > /home/ubuntu/kind-config
 kind: Cluster
@@ -52,6 +57,13 @@ nodes:
   - containerPort: 443
     hostPort: 443
     protocol: TCP
+  extraMounts:
+    - hostPath: /home/ubuntu/hostvolumes/volume-1
+      containerPath: /hostvolume-1
+    - hostPath: /home/ubuntu/hostvolumes/volume-2
+      containerPath: /hostvolume-2
+    - hostPath: /home/ubuntu/hostvolumes/volume-3
+      containerPath: /hostvolume-3
 EOF
 sudo chown ubuntu:ubuntu /home/ubuntu/kind-config
 sudo usermod -a -G docker ubuntu
