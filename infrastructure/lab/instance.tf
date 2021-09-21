@@ -89,6 +89,31 @@ resource "aws_instance" "k8s-lab-baremetal-instance" {
     }
   }
 
+  provisioner "file" {
+    source      = "../../app"
+    destination = "/home/ubuntu"
+
+    connection {
+      type        = "ssh"
+      user        = "ubuntu"
+      private_key = file("${path.module}/../files/k8s_lab_rsa")
+      host        = aws_instance.k8s-lab-baremetal-instance[count.index].public_ip
+    }
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "docker build -t sample-app:1.0.0-0 -f /home/ubuntu/app/Dockerfile /home/ubuntu/app",
+      "kind load docker-image sample-app:1.0.0-0",
+    ]
+
+    connection {
+      type        = "ssh"
+      user        = "ubuntu"
+      private_key = file("${path.module}/../files/k8s_lab_rsa")
+      host        = aws_instance.k8s-lab-baremetal-instance[count.index].public_ip
+    }
+  }
   tags = {
     name = "k8s-lab-instance"
   }
@@ -106,6 +131,32 @@ resource "aws_instance" "k8s-lab-ami-instance" {
   root_block_device {
     volume_size = 30
     volume_type = "standard"
+  }
+
+  provisioner "file" {
+    source      = "../../app"
+    destination = "/home/ubuntu"
+
+    connection {
+      type        = "ssh"
+      user        = "ubuntu"
+      private_key = file("${path.module}/../files/k8s_lab_rsa")
+      host        = aws_instance.k8s-lab-ami-instance[count.index].public_ip
+    }
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "docker build -t sample-app:1.0.0-0 -f /home/ubuntu/app/Dockerfile /home/ubuntu/app",
+      "kind load docker-image sample-app:1.0.0-0",
+    ]
+
+    connection {
+      type        = "ssh"
+      user        = "ubuntu"
+      private_key = file("${path.module}/../files/k8s_lab_rsa")
+      host        = aws_instance.k8s-lab-ami-instance[count.index].public_ip
+    }
   }
 
   tags = {
