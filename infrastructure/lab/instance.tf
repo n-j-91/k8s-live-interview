@@ -117,12 +117,12 @@ resource "aws_instance" "k8s-lab-baremetal-instance" {
 
   provisioner "remote-exec" {
     inline = [
-      "kubectl create -f /home/ubuntu/app/manifests/pv.yml",
-      "kubectl create -f /home/ubuntu/app/manifests/pvc.yml",
-      "kubectl create -f /home/ubuntu/app/manifests/secret.yml",
-      "kubectl create -f /home/ubuntu/app/manifests/deployment.yml",
-      "kubectl create -f /home/ubuntu/app/manifests/service.yml",
-      "kubectl create -f /home/ubuntu/app/manifests/ingress.yml",
+      "kubectl apply -f /home/ubuntu/app/manifests/pv.yml",
+      "kubectl apply -f /home/ubuntu/app/manifests/pvc.yml",
+      "kubectl apply -f /home/ubuntu/app/manifests/secret.yml",
+      "kubectl apply -f /home/ubuntu/app/manifests/deployment.yml",
+      "kubectl apply -f /home/ubuntu/app/manifests/service.yml",
+      "kubectl apply -f /home/ubuntu/app/manifests/ingress.yml",
     ]
 
     connection {
@@ -180,12 +180,12 @@ resource "aws_instance" "k8s-lab-ami-instance" {
 
   provisioner "remote-exec" {
     inline = [
-      "kubectl create -f /home/ubuntu/app/manifests/pv.yml",
-      "kubectl create -f /home/ubuntu/app/manifests/pvc.yml",
-      "kubectl create -f /home/ubuntu/app/manifests/secret.yml",
-      "kubectl create -f /home/ubuntu/app/manifests/deployment.yml",
-      "kubectl create -f /home/ubuntu/app/manifests/service.yml",
-      "kubectl create -f /home/ubuntu/app/manifests/ingress.yml",
+      "kubectl apply -f /home/ubuntu/app/manifests/pv.yml",
+      "kubectl apply -f /home/ubuntu/app/manifests/pvc.yml",
+      "kubectl apply -f /home/ubuntu/app/manifests/secret.yml",
+      "kubectl apply -f /home/ubuntu/app/manifests/deployment.yml",
+      "kubectl apply -f /home/ubuntu/app/manifests/service.yml",
+      "kubectl apply -f /home/ubuntu/app/manifests/ingress.yml",
     ]
 
     connection {
