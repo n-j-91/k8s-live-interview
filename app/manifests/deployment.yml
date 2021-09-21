@@ -1,1 +1,61 @@
-# sample-app deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sample-app
+  labels:
+    app: sample-app
+spec:
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: sample-app
+  template:
+    metadata:
+      labels:
+        app: sample-app
+    spec:
+      containers:
+        - image: sample-app:1.0.0-0
+          name: sample-app
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "200Mi"
+          livenessProbe:
+            httpGet:
+              path: /_status/healthz
+              port: sample-app
+            initialDelaySeconds: 20
+            timeoutSeconds: 5
+            failureThreshold: 5
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /_status/healthz
+              port: sample-app
+            initialDelaySeconds: 20
+            timeoutSeconds: 5
+            failureThreshold: 5
+            periodSeconds: 10
+          env:
+            - name: JSON_DIR
+              value: /resources
+          ports:
+            - containerPort: 8080
+              name: sample-app
+          volumeMounts:
+            - mountPath: /data
+              name: data
+            - mountPath: /resources
+              name: input-jsons
+      volumes:
+        - name: data
+          emptyDir: {}
+        - name: input-jsons
+          configMap:
+            name: sample-app-inputs
+      restartPolicy: Always
