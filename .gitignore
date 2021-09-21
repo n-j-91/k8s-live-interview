@@ -3,11 +3,12 @@ infrastructure/.terraform/*
 infrastructure/.terraform.*
 infrastructure/.terraform.lock.hcl
 infrastructure/files/*rsa*
-infrastructure/initial-setup/.terraform/*
-infrastructure/initial-setup/.terraform.*
-infrastructure/initial-setup/.terraform.lock.hcl
+infrastructure/lab/.terraform/*
+infrastructure/lab/.terraform.*
+infrastructure/lab/.terraform.lock.hcl
 **/.terraform/*
-
+app/**/*.pyc
+app/__pycache__/*
 # .tfstate files
 *.tfstate
 *.tfstate.*
