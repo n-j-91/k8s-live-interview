@@ -101,10 +101,24 @@ resource "aws_instance" "k8s-lab-baremetal-instance" {
     }
   }
 
+  provisioner "file" {
+    source      = "../../instructions"
+    destination = "/home/ubuntu"
+
+    connection {
+      type        = "ssh"
+      user        = "ubuntu"
+      private_key = file("${path.module}/../files/k8s_lab_rsa")
+      host        = aws_instance.k8s-lab-baremetal-instance[count.index].public_ip
+    }
+  }
+
   provisioner "remote-exec" {
     inline = [
       "cd /home/ubuntu/app && docker build -t sample-app:1.0.0-0 -f Dockerfile .",
       "kind load docker-image sample-app:1.0.0-0",
+      "cd /home/ubuntu/instructions && docker build -t instructions:1.0.0-0 -f Dockerfile .",
+      "docker run --rm --name instructions -d -p 8085:8085 instructions:1.0.0-0",
     ]
 
     connection {
@@ -146,10 +160,24 @@ resource "aws_instance" "k8s-lab-ami-instance" {
     }
   }
 
+  provisioner "file" {
+    source      = "../../instructions"
+    destination = "/home/ubuntu"
+
+    connection {
+      type        = "ssh"
+      user        = "ubuntu"
+      private_key = file("${path.module}/../files/k8s_lab_rsa")
+      host        = aws_instance.k8s-lab-ami-instance[count.index].public_ip
+    }
+  }
+
   provisioner "remote-exec" {
     inline = [
       "cd /home/ubuntu/app && docker build -t sample-app:1.0.0-0 -f Dockerfile .",
       "kind load docker-image sample-app:1.0.0-0",
+      "cd /home/ubuntu/instructions && docker build -t instructions:1.0.0-0 -f Dockerfile .",
+      "docker run --rm --name instructions -d -p 8085:8085 instructions:1.0.0-0",
     ]
 
     connection {

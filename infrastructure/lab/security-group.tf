@@ -24,6 +24,16 @@ resource "aws_security_group_rule" "k8s-lab-ingress-http" {
   security_group_id = aws_security_group.k8s-lab-sg.id
 }
 
+resource "aws_security_group_rule" "k8s-lab-instructions-http" {
+  type              = "ingress"
+  from_port         = 8085
+  to_port           = 8085
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  ipv6_cidr_blocks  = ["::/0"]
+  security_group_id = aws_security_group.k8s-lab-sg.id
+}
+
 resource "aws_security_group_rule" "k8s-lab-egress-all" {
   type              = "egress"
   from_port         = 0
