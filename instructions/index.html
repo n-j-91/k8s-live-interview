@@ -1,10 +1,88 @@
 <html>
 
 <body>
-  <p>
-    <b>Test Instructions</b><br>
-    <b>----------------------</b><br>
-  </p>
+  <p><span style="text-decoration: underline;"><strong>Instructions for the Lab</strong></span></p>
+  <p>For this assignment, you will be given access to a server with pre-installed kubernetes environment.</p>
+  <p>In order to complete the tasks below, SSH into this environment with the private key and server details shared by
+    your interviewer. The server is pre-configured with <strong><em>kubectl</em>&nbsp;</strong>command line to allow
+    access to the kubernetes platform.</p>
+  <p>Access <em>"/home/ubuntu/app/manifests"</em> directory in the server. List all files in this directory. Following
+    kubernetes resource manifests should be available in this directory.</p>
+  <ul>
+    <li>pv.yml</li>
+    <li>pvc.yml</li>
+    <li>secret.yml</li>
+    <li>deployment.yml (This file may have syntax errors and wrong configurations)</li>
+    <li>service.yml (This file may have wrong configurations)</li>
+    <li>ingress.yml (This file is incomplete)</li>
+  </ul>
+  <p>&nbsp;</p>
+  <p>1. Create pv and pvc in the default namespace first with the given
+    manifests.&nbsp;<br /><strong>Note:&nbsp;</strong>pv created by the pv.yml is mapped to
+    "<em>/home/ubuntu/hostvolumes/volume-1" p</em>ath of the server. This means, any file you will copy to
+    "<em>/home/ubuntu/hostvolumes/volume-1"&nbsp;</em>directory will be availabel inside the pv automatically.</p>
+  <p>&nbsp;</p>
+  <p>2. Create a file in ".json" format in the "<em>/home/ubuntu/hostvolumes/volume-1"&nbsp;</em>directory with the
+    following content. This will be required in later stages to verify the functionality of successfully deployed
+    sample-app.</p>
+  <p>{<br />&nbsp; &nbsp; "colors": [ <br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; { "color":
+    "black",<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "category":
+    "hue",<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "type":
+    "primary",<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; "code": { "rgba":
+    [255,255,255,1], "hex": "#000" }</p>
+  <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; },<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp; {&nbsp; &nbsp; "color": "white",<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp; &nbsp; "category": "value",<br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp; "code": { "rgba": [0,0,0,1], "hex": "#FFF" } <br />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    &nbsp; &nbsp; &nbsp; } <br />&nbsp; &nbsp; &nbsp; ]<br />}</p>
+  <p>&nbsp;</p>
+  <p>3. Find out the syntax issue with deployment.yaml next, fix it and deploy.</p>
+  <p>&nbsp;</p>
+  <p>4. Check the status of the sample-app pod after deployment is created. You may notice that, it is failing and
+    constantly restarting now. Identify the reason for this based on pod events and try to fix the issue.</p>
+  <p><strong>Hint:&nbsp;</strong>sample-app has a rest endpoint called <em>"/health"</em> to check it's status. When an
+    http GET request is sent to this "<em>/health"</em> endpoint, it will return following response with 200 http status
+    code.</p>
+  <div>
+    <div><strong><em>{"msg": "Server is healthy", "status_code": 200}</em></strong></div>
+    <div>&nbsp;</div>
+    <div>&nbsp;</div>
+  </div>
+  <p>5. Deploy "service.yml" to "default" namespace. This file does not have syntax issues, but it may contain a logical
+    issue that avoid connections to sample-app pod. Correct the issue and re-deploy service.yml</p>
+  <p><strong>Hint: </strong>For verification<strong>, </strong>you can use kubectl port-forward to establish a tunnel
+    between the terminal and the service. You can next send http requests to sample-app from another instance of a
+    terminal in the server using curl.<br />e.g. kubectl port-forward svc/sample-app &lt;local port&gt;:&lt;service
+    port&gt;<br />&nbsp; &nbsp; &nbsp; &nbsp;curl -X GET <a
+      href="http://localhost:&lt;localport&gt;/healthcheck">http://localhost:&lt;localport&gt;/healthcheck</a></p>
+  <p>&nbsp;</p>
+  <p>6. Deploye <em>"secret.yml"</em> to <em>"default"</em> namespace. Then, use above approach to verify response from
+    "/readsecret" endopoint of the sample-app. It should return a similar response as below.&nbsp;</p>
+  <div>
+    <div><strong>{"msg": "MY_SECRET is Neueda", "status_code": 200}</strong></div>
+    <div>&nbsp;</div>
+    <div>If it does not return expected response, troubleshoot and identify the issue in the deployment based on the
+      error
+      message.</div>
+    <div>&nbsp;</div>
+    <div><strong>Hint: </strong>&nbsp;Compare the response returned by the <em>"/reasecret"</em> endpoint of the
+      sample-app with the environment variable section of the deployment.yml. Modify the deployment of sample-app
+      accordingly to use the content of from secret.yml instead, so that <em>"/reasecret"&nbsp;</em>will return the
+      expected response above.</div>
+    <div>&nbsp;</div>
+    <div>&nbsp;</div>
+    <div>7. Complete the "<em>ingress.yml"&nbsp;</em>and deploy to default namespace. Try to open
+      <em><strong>http://</strong></em><em><strong>sample-app.example.com/readjson&nbsp;</strong></em>from your browser
+      and check if it returns the content of the file you created in step 2.
+    </div>
+    <div>&nbsp;</div>
+    <div><strong>Hint:&nbsp;</strong>Add the record shared by the interviewer at the begining to /etc/hosts file of your
+      workstation. If you are on windows, this file is located at C:\Windows\System32drivers\etc\hosts</div>
+  </div>
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+  <div>8. Scale up the replicas of sample-app to 2.</div>
+  </div>
 </body>
 
 </html>

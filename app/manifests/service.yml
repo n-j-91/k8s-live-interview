@@ -4,7 +4,7 @@ metadata:
   name: sample-app
 spec:
   selector:
-    app: sample-app
+    app: my-app
   type: ClusterIP
   ports:
     - name: sample-app

@@ -27,30 +27,27 @@ spec:
               memory: "200Mi"
           livenessProbe:
             httpGet:
-              path: /health
+              path: /wrong/health/endpoint
               port: sample-app
-            initialDelaySeconds: 20
+            initialDelaySeconds: 10
             timeoutSeconds: 5
-            failureThreshold: 5
-            periodSeconds: 10
+            failureThreshold: 3
+            periodSeconds: 5
           readinessProbe:
             httpGet:
-              path: /health
+              path: /wrong/health/endpoint
               port: sample-app
-            initialDelaySeconds: 20
+            initialDelaySeconds: 10
             timeoutSeconds: 5
-            failureThreshold: 5
-            periodSeconds: 10
+            failureThreshold: 3
+            periodSeconds: 5
           env:
             - name: JSON_DIR
               value: /resources
             - name: LOG_LEVEL
               value: debug
             - name: MY_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: sample-app-secret
-                  key: secretkey
+              value: wrong_secret
           ports:
             - containerPort: 8080
               name: sample-app
@@ -60,5 +57,5 @@ spec:
       volumes:
         - name: input-jsons
           persistentVolumeClaim:
-            claimName: input-jsons-pvc
+          claimName: input-jsons-pvc
       restartPolicy: Always
